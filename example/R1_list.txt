@@ -1,0 +1,1 @@
+/home/yangling/桌面/Celegans/pipeline_test/combined_SRR493099_paired_R1.fastq.gz

@@ -1,0 +1,9 @@
+{
+    "path" : "/media/yangling/External Data 1/RNA-seq/gencode/pipeline",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

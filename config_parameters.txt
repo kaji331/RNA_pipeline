@@ -1,0 +1,9 @@
+PARALLEL_JOB = 1
+TRIMMOMATIC = /home/yangling/Softwares/Trimmomatic/trimmomatic-0.39.jar
+STAR_REF = /home/yangling/桌面/Celegans/star_index_ws220_149
+RSEM_REF = /home/yangling/桌面/Celegans/rsem_index_ws220/coding_transcript
+HISAT2_REF = /home/yangling/桌面/Celegans/hisat2_index_ws220/c_elegans_WS220_dna
+GTF = /home/yangling/桌面/Celegans/rsem_index_ws220/coding_transcript.gtf
+KALLISTO_REF = /home/yangling/桌面/Celegans/kallisto_index_ws220_transcript/c_elegans_WS220_transcript
+BED = /home/yangling/桌面/Celegans/coding_transcript.bed12
+SHELL = /usr/bin/zsh

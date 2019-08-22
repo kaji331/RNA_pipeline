@@ -1,0 +1,56 @@
+---
+title: "Fastqc report"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+Summary
+```{r summary, echo=FALSE, message=FALSE}
+library(pipeR)
+library(ngsReports)
+
+args <- commandArgs(trailingOnly=T)
+
+split_str <- strsplit(args[1],"\\.")[[1]]
+suffix <- split_str[length(split_str)]
+if (suffix == "gz") {
+  fastqc_file <- split_str[-c(length(split_str),length(split_str) - 1)] %>>% 
+    paste0("_fastqc.zip")
+} else {
+  fastqc_file <- split_str[-length(split_str)] %>>% paste0("_fastqc.zip")
+}
+
+fd <- FastqcData(fastqc_file)
+
+getModule(fd,"Summary")[,2:3] %>>% 
+  rbind(data.frame(Status=as.integer(readTotals(fd)[1,2]),
+                   Category=colnames(readTotals(fd))[2])) %>>% 
+  as.data.frame %>>% (xtable::xtable(.))
+```
+
+Base quality plot
+```{r bq, echo=FALSE, message=FALSE}
+plotBaseQuals(fd)
+```
+
+Sequence quality plot
+```{r sq, echo=FALSE, message=FALSE}
+plotSeqQuals(fd)
+```
+
+Sequence content plot
+```{r sc, echo=FALSE, message=FALSE}
+plotSeqContent(fd)
+```
+
+Adapter contamination plot
+```{r ac, echo=FALSE, message=FALSE}
+plotAdapterContent(fd)
+```
+
+GC distribution plot
+```{r gc, echo=FALSE, message=FALSE}
+plotGcContent(fd,gcType="Transcriptome",species=args[2])
+```
