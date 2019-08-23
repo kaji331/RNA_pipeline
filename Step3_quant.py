@@ -132,11 +132,13 @@ def star_quantify(reads_1, reads_2, strand, threads):
     tm = " --twopassMode Basic"
     # Merging and mapping of overlapping paired-end reads
     po = " --peOverlapNbasesMin 12" + " --peOverlapMMp 0.1"
+    # Allocating more space for reads alignment
+    atp = " --alignTranscriptsPerReadNmax 20000"
 
     com = "STAR --runThreadN " + threads + " --genomeDir " + \
           PARAMETERS.OPTIONS["STAR_REF"] + " --readFilesIn " + reads_1 + " " + \
           reads_2 + encode_option + shared_mem + out + cufflinks + ot + chim + \
-          qm + tm + po + com
+          qm + tm + po + atp + com
     print(com)
     sub.call(com, shell=True)
     # Quality Checking
