@@ -4,7 +4,6 @@
 # jobs. e.g. PARALLEL_JOB = 10
 
 
-import os
 import sys
 import argparse as ap
 import itertools as it
@@ -32,7 +31,8 @@ def base(reads_1):
         out = out.rstrip('1').rstrip('R').rstrip('.')
     elif out.endswith(".1"):
         out = out.rstrip('1').rstrip('.')
-    return(out)
+    return out
+
 
 def to2(reads_1):
     if reads_1.endswith(".gz"):
@@ -52,55 +52,59 @@ def to2(reads_1):
     elif prefix.endswith("_1"):
         prefix = prefix.replace("_1", "_2")
         out = '.'.join([prefix, suffix])
-    return(out)
+    return out
 
-def fastqc(reads_1, reads_2, threads = '2'):
+
+def fastqc(reads_1, reads_2, threads='2'):
     print("fastqc", "-t", threads, reads_1, reads_2)
     sub.call(["fastqc", "-t", threads, reads_1, reads_2])
 
+
 def fastq_report(sample, species):
-    dir = "'" + base(sample) + "/1'"
+    d = "'" + base(sample) + "/1'"
     rmd = "-e \"rmarkdown::render('fastq_report.Rmd',output_dir=" + \
-          dir + ")\""
+          d + ")\""
     command = ' '.join(["Rscript", rmd, sample, species])
     print(command)
-    sub.call(command, shell = True)
+    sub.call(command, shell=True)
     # Reads_2
-    dir = "'" + base(sample) + "/2'"
+    d = "'" + base(sample) + "/2'"
     rmd = "-e \"rmarkdown::render('fastq_report.Rmd',output_dir=" + \
-        dir + ")\""
+          d + ")\""
     command = ' '.join(["Rscript", rmd, to2(sample), species])
     print(command)
-    sub.call(command, shell = True)
+    sub.call(command, shell=True)
 
 
 # Help function for parallel running
 def helper_fastqc(args):
     fastqc(args[0], args[1])
 
+
 def helper_fastq_report(args):
     fastq_report(args[0], args[1])
 
+
 def setting():
     parser = \
-        ap.ArgumentParser(description =
+        ap.ArgumentParser(description=
                           "Automatic RNA-seq paired-end fastq QC pipeline.")
-    parser.add_argument("-F", "--list_R1", required = True,
-                        help = "List of R1 Fastq files.")
+    parser.add_argument("-F", "--list_R1", required=True,
+                        help="List of R1 Fastq files.")
     parser.add_argument("-R", "--list_R2",
-                        help = "List of R2 Fastq files. [Optional]")
-    parser.add_argument("-S", "--species", default = "Hsapiens",
-                        help = "Name of species from BSgenome packages. "
-                               "e.g. Hsapiens, Celegans [Default: Hsapiens]")
+                        help="List of R2 Fastq files. [Optional]")
+    parser.add_argument("-S", "--species", default="Hsapiens",
+                        help="Name of species from BSgenome packages. "
+                             "e.g. Hsapiens, Celegans [Default: Hsapiens]")
     parser.add_argument("-P", "--parameter_file", type=str,
                         default="./config_parameters.txt",
                         help="Some constant parameters. See example. "
                              "[Default: ./config_parameters.txt]")
-    parser.add_argument("-v", "--version", action = "version",
-                        version = "2019-08.", help = "Show version")
+    parser.add_argument("-v", "--version", action="version",
+                        version="2019-08.", help="Show version")
     a = parser.parse_args()
 
-    if a.list_R2 == None:
+    if a.list_R2 is None:
         a.list_R2 = -1
     if a.species not in ["Btaurus", "Celegans", "Cfamiliaris", "Dmelanogaster",
                          "Drerio", "Hsapiens", "Mmulatta", "Mmusculus",
@@ -109,11 +113,12 @@ def setting():
         print("We temporarily don't support this species for GC distribution "
               "... use Hsapiens instead!")
         a.species = "Hsapiens"
-    if a.parameter_file == None:
+    if a.parameter_file is None:
         print("Wrong parameter file!")
         sys.exit(1)
 
-    return(a)
+    return a
+
 
 def main():
     load = setting()
@@ -131,7 +136,7 @@ def main():
 
     # Processing parameter file
     with open(load.parameter_file, 'r') as fr:
-        lines = [x.strip().replace(' ','') for x in fr.readlines()]
+        lines = [x.strip().replace(' ', '') for x in fr.readlines()]
         for i in lines:
             if not i.startswith('#') and i != '':
                 opt = i.split('=')
@@ -144,6 +149,7 @@ def main():
     pool.map(helper_fastqc, it.zip_longest(f_list, r_list))
     pool.map(helper_fastq_report,
              it.zip_longest(f_list, it.repeat(load.species, len(f_list))))
+
 
 if __name__ == "__main__":
     main()

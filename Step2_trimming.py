@@ -7,7 +7,6 @@
 # jobs. e.g. TRIMMOMATIC = /home/xxx/trimmomatic.jar
 
 
-import os
 import sys
 import argparse as ap
 import itertools as it
@@ -18,6 +17,7 @@ import multiprocessing as mul
 class THREAD:
     # Number of parallel jobs
     GROUP = 2
+
 
 class PARAMETERS:
     OPTIONS = {}
@@ -38,7 +38,8 @@ def base(reads_1):
         out = out.rstrip('1').rstrip('R').rstrip('.')
     elif out.endswith(".1"):
         out = out.rstrip('1').rstrip('.')
-    return(out)
+    return out
+
 
 def to2(reads_1):
     if reads_1.endswith(".gz"):
@@ -58,10 +59,11 @@ def to2(reads_1):
     elif prefix.endswith("_1"):
         prefix = prefix.replace("_1", "_2")
         out = '.'.join([prefix, suffix])
-    return(out)
+    return out
+
 
 def trimming(reads_1, reads_2, num_5, num_3, adapter, threads):
-    if adapter != None:
+    if adapter is not None:
         adapter = ':'.join(["ILLUMINACLIP", adapter, "2:30:10"])
     else:
         adapter = ''
@@ -70,14 +72,22 @@ def trimming(reads_1, reads_2, num_5, num_3, adapter, threads):
     # Alternative method:
     # read = sub.getoutput(cmd)
     # keep_3 = str(len(read.splitlines()[1]) - int(num_3))
-    read = sub.run(cmd, shell = True, stdout = sub.PIPE, stderr = sub.STDOUT)
+    read = sub.run(cmd, shell=True, stdout=sub.PIPE, stderr=sub.STDOUT)
     keep_3 = str(len(read.stdout) - num_3)
     # Path
     options = ' '.join(["PE", "-threads", str(threads), reads_1, reads_2,
-                        '_'.join([base(reads_1), "paired_R1.fastq.gz"]),
-                        '_'.join([base(reads_1), "unpaired_R1.fastq.gz"]),
-                        '_'.join([base(reads_1), "paired_R2.fastq.gz"]),
-                        '_'.join([base(reads_1), "unpaired_R2.fastq.gz"]),
+                        '_'.join([base(reads_1) + '/' +
+                                  base(reads_1).split('/')[-1],
+                                  "paired_R1.fastq.gz"]),
+                        '_'.join([base(reads_1) + '/' +
+                                  base(reads_1).split('/')[-1],
+                                  "unpaired_R1.fastq.gz"]),
+                        '_'.join([base(reads_1) + '/' +
+                                  base(reads_1).split('/')[-1],
+                                  "paired_R2.fastq.gz"]),
+                        '_'.join([base(reads_1) + '/' +
+                                  base(reads_1).split('/')[-1],
+                                  "unpaired_R2.fastq.gz"]),
                         adapter, ':'.join(["HEADCROP", str(num_5)]),
                         ':'.join(["CROP", keep_3]), ':'.join(["LEADING", "30"]),
                         ':'.join(["TRAILING", "30"]),
@@ -85,51 +95,54 @@ def trimming(reads_1, reads_2, num_5, num_3, adapter, threads):
     command = ' '.join(["java", "-jar", PARAMETERS.OPTIONS["TRIMMOMATIC"],
                         options])
     print(command)
-    sub.call(command, shell = True)
+    sub.call(command, shell=True)
+
 
 def helper_trimming(args):
     trimming(args[0], args[1], args[2], args[3], args[4], args[5])
 
+
 def setting():
     parser = \
-        ap.ArgumentParser(description =
+        ap.ArgumentParser(description=
                           "Automatic RNA-seq paired-end fastq trimming "
                           "pipeline.")
-    parser.add_argument("-F", "--list_R1", required = True,
-                        help = "List of R1 Fastq files.")
+    parser.add_argument("-F", "--list_R1", required=True,
+                        help="List of R1 Fastq files.")
     parser.add_argument("-R", "--list_R2",
-                        help = "List of R2 Fastq files. [Optional]")
-    parser.add_argument("-5", "--cut_5", default = 0, type = int,
-                        help = "Numbers of bases to cut from 5' head. "
-                               "[Default: 0]")
-    parser.add_argument("-3", "--cut_3", default = 0, type = int,
-                        help = "Numbers of bases to cut from 3' head. "
-                               "[Default: 0]")
-    parser.add_argument("-A", "--adapter", default = None, type = str,
-                        help = "Path of adapter file for Trimmomatic. "
-                               "[Optinal]")
-    parser.add_argument("-T", "--threads", default = 2, type = int,
-                        help = "Number of threads for each job. [Default: 2]")
+                        help="List of R2 Fastq files. [Optional]")
+    parser.add_argument("-5", "--cut_5", default=0, type=int,
+                        help="Numbers of bases to cut from 5' head. "
+                             "[Default: 0]")
+    parser.add_argument("-3", "--cut_3", default=0, type=int,
+                        help="Numbers of bases to cut from 3' head. "
+                             "[Default: 0]")
+    parser.add_argument("-A", "--adapter", default=None, type=str,
+                        help="Path of adapter file for Trimmomatic. "
+                             "[Optinal]")
+    parser.add_argument("-T", "--threads", default=2, type=int,
+                        help="Number of threads for each job. [Default: 2]")
     parser.add_argument("-P", "--parameter_file", type=str,
                         default="./config_parameters.txt",
                         help="Some constant parameters. See example. "
                              "[Default: ./config_parameters.txt]")
-    parser.add_argument("-v", "--version", action = "version",
-                        version = "2019-08.", help = "Show version")
+    parser.add_argument("-v", "--version", action="version",
+                        version="2019-08.", help="Show version")
     a = parser.parse_args()
 
     if a.threads < 1:
         print("Positive number for threads!")
         sys.exit(1)
-    if a.parameter_file == None:
+    if a.parameter_file is None:
         print("Wrong parameter file!")
         sys.exit(1)
 
-    return(a)
+    return a
+
 
 def main():
     load = setting()
-    if load.list_R2 == None:
+    if load.list_R2 is None:
         with open(load.list_R1, 'r') as fr:
             r_list = [to2(x.strip()) for x in fr.readlines()]
     else:
@@ -143,7 +156,7 @@ def main():
 
     # Processing parameter file
     with open(load.parameter_file, 'r') as fr:
-        lines = [x.strip().replace(' ','') for x in fr.readlines()]
+        lines = [x.strip().replace(' ', '') for x in fr.readlines()]
         for i in lines:
             if not i.startswith('#') and i != '':
                 opt = i.split('=')
@@ -161,6 +174,7 @@ def main():
                             it.repeat(load.cut_3, len(f_list)),
                             it.repeat(load.adapter, len(f_list)),
                             it.repeat(load.threads, len(f_list))))
+
 
 if __name__ == "__main__":
     main()

@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b5544291-33c5-4e10-beb5-b1ed9c67a47b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Step0_combine.py" beforeDir="false" afterPath="$PROJECT_DIR$/Step0_combine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Step1_qc.py" beforeDir="false" afterPath="$PROJECT_DIR$/Step1_qc.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Step2_trimming.py" beforeDir="false" afterPath="$PROJECT_DIR$/Step2_trimming.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Step3_quant.py" beforeDir="false" afterPath="$PROJECT_DIR$/Step3_quant.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/R1_list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/example/R1_list.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/combine.txt" beforeDir="false" afterPath="$PROJECT_DIR$/example/combine.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

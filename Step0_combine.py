@@ -1,4 +1,4 @@
-#/usr/bin/env python3
+#!/usr/bin/env python3
 
 # Combine fastq files, different file groups should be separated by empty line.
 # e.g.
@@ -21,15 +21,16 @@ import subprocess as sub
 
 def setting():
     parser = \
-        ap.ArgumentParser(description =
+        ap.ArgumentParser(description=
                           "Automatic RNA-seq paired-end fastq QC pipeline.")
-    parser.add_argument("-F", "--reads_list", required = True,
-                        help = "List of Fastq files need to be combined.")
-    parser.add_argument("-v", "--version", action = "version",
-                        version = "2019-08.", help = "Show version")
+    parser.add_argument("-F", "--reads_list", required=True,
+                        help="List of Fastq files need to be combined.")
+    parser.add_argument("-v", "--version", action="version",
+                        version="2019-08.", help="Show version")
     a = parser.parse_args()
 
-    return(a)
+    return a
+
 
 def main():
     load = setting()
@@ -40,14 +41,14 @@ def main():
             if line != '':
                 temp.append(line)
             else:
-                sub.call([' '.join(["cat",' '.join(temp), '>',
+                sub.call([' '.join(["cat", ' '.join(temp), '>',
                                     os.path.dirname(temp[0]) + "/combined_" +
-                                    os.path.basename(temp[0])])], shell = True)
+                                    os.path.basename(temp[0])])], shell=True)
                 temp = []
 
-    sub.call([' '.join(["cat",' '.join(temp), '>',
+    sub.call([' '.join(["cat", ' '.join(temp), '>',
                         os.path.dirname(temp[0]) + "/combined_" +
-                        os.path.basename(temp[0])])], shell = True)
+                        os.path.basename(temp[0])])], shell=True)
 
 
 if __name__ == "__main__":
