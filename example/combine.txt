@@ -1,5 +1,5 @@
-/home/yangling/桌面/Celegans/SRR493099_1.fastq.gz
-/home/yangling/桌面/Celegans/SRR493100_1.fastq.gz
+/home/yangling/桌面/Celegans/pipeline_test2/SRR351040_1.fastq.gz
+/home/yangling/桌面/Celegans/pipeline_test2/SRR351041_1.fastq.gz
 
-/home/yangling/桌面/Celegans/SRR493099_2.fastq.gz
-/home/yangling/桌面/Celegans/SRR493100_2.fastq.gz
+/home/yangling/桌面/Celegans/pipeline_test2/SRR351040_2.fastq.gz
+/home/yangling/桌面/Celegans/pipeline_test2/SRR351041_2.fastq.gz

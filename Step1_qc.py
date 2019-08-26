@@ -25,13 +25,13 @@ def base(reads_1):
         out = reads_1.split('.')
         out = '.'.join(out[:len(out) - 1])
     if out.endswith("_R1"):
-        out = out.strip("_R1")
+        out = out.rstrip('1').rstrip('R').rstrip('_')
     elif out.endswith("_1"):
-        out = out.strip("_1")
+        out = out.rstrip('1').rstrip('_')
     elif out.endswith(".R1"):
-        out = out.strip(".R1")
+        out = out.rstrip('1').rstrip('R').rstrip('.')
     elif out.endswith(".1"):
-        out = out.strip(".1")
+        out = out.rstrip('1').rstrip('.')
     return(out)
 
 def to2(reads_1):
