@@ -12,6 +12,7 @@ fi
 # Check RSeQC installation
 if [ -x "$(command -v bam_stat.py)" ]
 then
+  rm -f $(dirname $1)/bam_stat.txt
   bam_stat.py -i $1 > $(dirname $1)/bam_stat.txt
   infer_experiment.py -r $2 -i $1 >> $(dirname $1)/bam_stat.txt
 else
@@ -20,6 +21,7 @@ else
   then
     echo "Please install RSeQC by pip!"
   else
+    rm -f $(dirname $1)/bam_stat.txt
     bam_stat.py -i $1 > $(dirname $1)/bam_stat.txt
     infer_experiment.py -r $2 -i $1 >> $(dirname $1)/bam_stat.txt
   fi
