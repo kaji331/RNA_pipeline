@@ -27,7 +27,7 @@ class THREAD:
 
 
 class PARAMETERS:
-    OPTIONS = {}
+    OPTIONS = {"SHELL": "/bin/bash"}
     BAM_LIST = []
 
 
