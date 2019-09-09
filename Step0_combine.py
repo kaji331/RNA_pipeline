@@ -22,7 +22,7 @@ import subprocess as sub
 def setting():
     parser = \
         ap.ArgumentParser(description=
-                          "Automatic RNA-seq paired-end fastq QC pipeline.")
+                          "Merging fastq files.")
     parser.add_argument("-F", "--reads_list", required=True,
                         help="List of Fastq files need to be combined.")
     parser.add_argument("-v", "--version", action="version",
